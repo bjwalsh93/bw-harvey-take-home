@@ -1,0 +1,7 @@
+harvey_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ./harvey_analytics.duckdb
+      threads: 1
