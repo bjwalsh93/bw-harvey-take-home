@@ -1,7 +1,16 @@
-# Harvey Analytics Project
+# Harvey Analytics Take-Home Project
 
 ## Overview
-This project contains dbt models for analyzing user and firm engagement with the Harvey legal AI platform. The models track various metrics including query patterns, document processing, feedback scores, and user engagement levels.
+Analysis of user engagement and usage patterns for Harvey's legal AI platform, used by thousands of elite lawyers for drafting, summarizing, researching, and performing other legal tasks. These models help define and measure healthy usage patterns across different legal workflows, providing scalable analytics to understand how lawyers are integrating AI into their practice.
+
+## Assumptions
+Legal AI Usage:
+- Higher feedback scores (4-5) indicate successful AI assistance with legal tasks
+- Users leveraging multiple features (ASSISTANT, VAULT, WORKFLOW) are more valuable as they're integrating AI across their legal workflow
+- Document volume indicates more complex queries
+- Firm size impacts expected usage patterns (larger firms likely have more diverse use cases)
+- Active usage is more important than just having access (common in legal tech where tools are firm-wide licensed but adoption varies)
+- Features are accessible by all users and not gated
 
 ## Models
 

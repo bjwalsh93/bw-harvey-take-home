@@ -1,0 +1,123 @@
+version: 2
+
+models:
+  - name: user_engagement
+    description: Monthly user activity metrics tracking engagement levels and feature usage. One row per user per month since their creation date.
+    columns:
+      - name: user_id
+        description: Unique identifier for the user
+        tests:
+          - not_null
+      - name: role
+        description: User's role in their organization
+      - name: month
+        description: Activity month in date format
+        tests:
+          - not_null
+      - name: query_count
+        description: Total number of queries in the month
+        tests:
+          - not_null
+          - ">= 0"
+      - name: days_active
+        description: Number of unique days with activity in the month
+        tests:
+          - not_null
+          - ">= 0"
+      - name: unique_query_types
+        description: Number of different query types used
+        tests:
+          - not_null
+          - ">= 0"
+      - name: avg_feedback_score
+        description: Average feedback score for the month (1-5 scale)
+        tests:
+          - ">=1"
+          - "<=5"
+      - name: engagement_level
+        description: Calculated engagement level based on activity metrics
+        tests:
+          - accepted_values:
+              values: ['Power User', 'High Engagement', 'Medium Engagement', 'Low Engagement', 'Inactive']
+      - name: total_docs
+        description: Total number of documents processed
+        tests:
+          - not_null
+          - ">= 0"
+
+  - name: firm_usage_summary
+    description: Firm-level metrics combining metadata with usage statistics. One row per firm.
+    columns:
+      - name: firm_id
+        description: Unique identifier for the firm
+        tests:
+          - unique
+          - not_null
+      - name: firm_name
+        description: Name of the firm
+        tests:
+          - not_null
+      - name: join_date
+        description: Date the firm was onboarded
+        tests:
+          - not_null
+      - name: arr
+        description: Annual Recurring Revenue
+        tests:
+          - not_null
+          - ">= 0"
+      - name: firm_size
+        description: Number of employees at the firm
+        tests:
+          - not_null
+          - ">= 0"
+      - name: active_users_all_time
+        description: Count of users who have ever been active
+        tests:
+          - not_null
+          - ">= 0"
+      - name: active_users_last_month
+        description: Count of users active in the last month
+        tests:
+          - not_null
+          - ">= 0"
+      - name: engagement_rate
+        description: Percentage of firm size that is active
+        tests:
+          - not_null
+          - ">= 0"
+          - "<= 100"
+
+  - name: cohort_analysis
+    description: Retention and usage metrics by user cohort and event type. Tracks how engagement evolves over time.
+    columns:
+      - name: cohort_month
+        description: Month when users first became active
+        tests:
+          - not_null
+      - name: activity_month
+        description: Month of activity being measured
+        tests:
+          - not_null
+      - name: event_type
+        description: Type of event (ASSISTANT, VAULT, WORKFLOW)
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ASSISTANT', 'VAULT', 'WORKFLOW']
+      - name: months_since_cohort
+        description: Number of months between cohort_month and activity_month
+        tests:
+          - not_null
+          - ">= 0"
+      - name: active_users
+        description: Number of active users from the cohort
+        tests:
+          - not_null
+          - ">= 0"
+      - name: retention_rate
+        description: Percentage of original cohort still active
+        tests:
+          - not_null
+          - ">= 0"
+          - "<= 100" 
