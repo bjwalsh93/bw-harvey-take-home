@@ -3,6 +3,12 @@
 ## Overview
 Analysis of user engagement and usage patterns for Harvey's legal AI platform, used by thousands of elite lawyers for drafting, summarizing, researching, and performing other legal tasks. These models help define and measure healthy usage patterns across different legal workflows, providing scalable analytics to understand how lawyers are integrating AI into their practice.
 
+## Project Structure
+- `/analyses`: SQL queries for data quality checks and metric analysis
+- `/seeds`: Source data files
+- `/models/base`: Cleansed source tables (base_events, base_users, base_firms)
+- `/models/marts`: Core analytical models (user_engagement, firm_usage_summary, cohort_analysis)
+
 ## Assumptions
 Legal AI Usage:
 - Higher feedback scores (4-5) indicate successful AI assistance with legal tasks
@@ -15,68 +21,68 @@ Legal AI Usage:
 ## Models
 
 ### user_engagement
-A monthly snapshot of user activity and engagement metrics. Creates one row per user per month since their creation date, including months with no activity.
+This table tracks user activity and engagement metrics over time. It contains one row per user per month starting from their creation date, including months with no activity. Use this table to monitor user adoption, identify power users, and spot engagement trends.
 
-**Structure:**
-- One row per user per month (starting from user creation date)
-- Inactive months are included with metrics set to 0
-- Engagement levels are calculated based on monthly activity
-
-**Key Metrics:**
-- Query counts (total, by type)
-- Active days per month
-- Document processing metrics
+Key metrics:
+- Query counts by feature (ASSISTANT, VAULT, WORKFLOW)
+- Days active per month
+- Documents processed
 - Feedback scores
-- Feature usage breakdown
+- Engagement level
 
-**Engagement Level Criteria:**
-- Power User:
-  - ≥ 4 active days AND
-  - ≥ 5 queries AND
-  - ≥ 45 documents processed
-- High Engagement:
-  - ≥ 5 queries AND
-  - ≥ 45 documents processed
-- Medium Engagement:
-  - > 2 queries OR
-  - > 12 documents processed
-- Low Engagement:
-  - ≥ 1 active day AND
-  - (≥ 1 query OR ≥ 1 document processed)
-- Inactive:
-  - No activity in the month
+Engagement levels are defined as:
+- Power User: ≥4 active days AND ≥5 queries AND ≥45 documents
+- High: ≥5 queries AND ≥45 documents
+- Medium: >2 queries OR >12 documents
+- Low: ≥1 active day AND (≥1 query OR ≥1 document)
+- Inactive: No activity
 
 ### firm_usage_summary
-A summary of firm-level engagement and usage metrics. One row per firm showing both all-time and recent activity.
+This table provides a single-row summary for each firm's overall platform usage. Use it to assess firm health, compare adoption across firms, and identify firms needing attention.
 
-**Key Metrics:**
-- Active users (all-time and last month)
-- Query volumes by type
-- Document processing totals
-- Feedback and satisfaction metrics
-- Engagement rate (% of firm size active)
+Key metrics:
+- Total active users
+- Last month's active users
+- Query volumes by feature
+- Engagement rate (active users / firm size)
+- Satisfaction rate (high feedback queries / total queries)
 
 ### cohort_analysis
-Analyzes user retention and engagement patterns by cohort and event type.
+This table groups users by their start month to track retention and usage patterns over time. Use it to evaluate onboarding effectiveness and long-term engagement trends.
 
-**Key Metrics:**
-- Cohort retention rates
-- Activity levels over time
-- Feature adoption patterns
-- Document processing trends
+Key metrics:
+- Monthly retention rates
+- Queries per retained user
+- Documents processed per cohort
+- Feature adoption by cohort age
 
-## Assumptions & Data Quality Notes
-1. Users are considered active in a month if they have at least one event
-2. Feedback scores range from 1-5, with 5 being most positive
-3. Complex queries are defined as those processing ≥ 10 documents
-4. Engagement levels are calculated on a monthly basis
-5. A month of activity is based on event_month
-6. All metrics for inactive months are set to 0 rather than null
-7. User metrics start from their created_date
+## Data Quality Notes (queries in data_analysis_and_quality)
+- 2 firms show zero activity since provisioning
+- 1 user appears in multiple firms
+- Only 12.1% of Active users achieve Power User status (507 out of 4709)
+- 5 days show unusual activity spikes
+- 3 instances of unusual feedback patterns found 
 
-## Usage
-The models are materialized as follows:
-- Base models (base_events, base_users, base_firms) → views
-- Analytical models (user_engagement, firm_usage_summary, cohort_analysis) → tables
 
-This ensures optimal query performance while maintaining data freshness.
+
+## How to Interpret Models and Metrics
+
+### User Activity & Trust Indicators
+- **Query Patterns**: Users progressing from simple (1 doc) to complex queries (10+ docs) suggest they're leveraging the AI for more sophisticated legal research tasks.
+- **Feature Mix**: Users engaging with multiple features (ASSISTANT, VAULT, WORKFLOW) are likely integrating the platform into their daily legal workflow rather than using it as a simple document search tool.
+
+### Engagement Levels Meaning
+- **Power Users**: These lawyers have fully integrated Harvey into their practice, using it frequently (4+ days/month) for substantial document analysis (45+ docs). They're your platform champions.
+- **High Engagement**: Regular users who trust the platform with significant document volumes but might not use it as frequently. Focus on increasing their active days.
+- **Medium/Low Engagement**: May be using Harvey for specific types of matters only. Opportunity to demonstrate value in other practice areas.
+- **Inactive**: Could be seasonal users (e.g., litigation teams between cases) or need additional training on platform capabilities.
+
+### Firm-Level Health Indicators
+- **Engagement Rate**: Low rates in large firms often indicate adoption limited to specific practice groups - opportunity for cross-department expansion.
+- **Satisfaction Rate**: High feedback scores on document-heavy queries validate the AI's accuracy for legal research tasks.
+- **Feature Distribution**: Firms heavily using VAULT might need education on WORKFLOW features for end-to-end matter management.
+
+### Cohort Analysis Application
+- **Early Usage**: First month patterns often reflect initial training effectiveness. High early document volumes suggest successful onboarding.
+- **Long-term Trends**: Growing document volumes per user over time indicate increasing trust and reliance on the platform.
+- **Retention Patterns**: Practice area seasonality may explain usage fluctuations. Focus on maintaining engagement between major matters.
