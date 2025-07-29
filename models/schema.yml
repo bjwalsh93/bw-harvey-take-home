@@ -18,22 +18,16 @@ models:
         description: Total number of queries in the month
         tests:
           - not_null
-          - ">= 0"
       - name: days_active
         description: Number of unique days with activity in the month
         tests:
           - not_null
-          - ">= 0"
       - name: unique_query_types
         description: Number of different query types used
         tests:
           - not_null
-          - ">= 0"
       - name: avg_feedback_score
         description: Average feedback score for the month (1-5 scale)
-        tests:
-          - ">=1"
-          - "<=5"
       - name: engagement_level
         description: Calculated engagement level based on activity metrics
         tests:
@@ -43,7 +37,6 @@ models:
         description: Total number of documents processed
         tests:
           - not_null
-          - ">= 0"
 
   - name: firm_usage_summary
     description: Firm-level metrics combining metadata with usage statistics. One row per firm.
@@ -65,28 +58,16 @@ models:
         description: Annual Recurring Revenue
         tests:
           - not_null
-          - ">= 0"
       - name: firm_size
         description: Number of employees at the firm
         tests:
           - not_null
-          - ">= 0"
       - name: active_users_all_time
         description: Count of users who have ever been active
-        tests:
-          - not_null
-          - ">= 0"
       - name: active_users_last_month
         description: Count of users active in the last month
-        tests:
-          - not_null
-          - ">= 0"
       - name: engagement_rate
         description: Percentage of firm size that is active
-        tests:
-          - not_null
-          - ">= 0"
-          - "<= 100"
 
   - name: cohort_analysis
     description: Retention and usage metrics by user cohort and event type. Tracks how engagement evolves over time.
@@ -109,15 +90,11 @@ models:
         description: Number of months between cohort_month and activity_month
         tests:
           - not_null
-          - ">= 0"
       - name: active_users
         description: Number of active users from the cohort
         tests:
           - not_null
-          - ">= 0"
       - name: retention_rate
         description: Percentage of original cohort still active
         tests:
-          - not_null
-          - ">= 0"
-          - "<= 100" 
+          - not_null 

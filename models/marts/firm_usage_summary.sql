@@ -41,6 +41,17 @@ firm_activity as (
     from user_activity
     where last_active_date >= (select date_trunc('month', max(event_timestamp)) - interval '1 month' from {{ ref('base_events') }})
     group by firm_id
+),
+engagement_stats as (
+    select 
+        firm_id,
+        count(case when engagement_level = 'Power User' then 1 end) as power_users,
+        count(case when engagement_level = 'High Engagement' then 1 end) as high_engagement_users,
+        count(case when engagement_level = 'Medium Engagement' then 1 end) as medium_engagement_users,
+        count(case when engagement_level = 'Low Engagement' then 1 end) as low_engagement_users
+    from {{ ref('int_user_monthly_engagement') }}
+    where event_month = (select max(event_month) from {{ ref('int_user_monthly_engagement') }})
+    group by firm_id
 )
 select
     f.firm_id,
@@ -60,7 +71,14 @@ select
     round(fa.total_high_feedback_queries::float / nullif(fa.total_queries, 0)::float * 100, 2) as satisfaction_rate,
     fa.total_docs_processed,
     round(fa.active_users::float / nullif(f.firm_size, 0)::float * 100, 2) as engagement_rate,
-    round(fa.total_queries::float / nullif(fa.active_users, 0)::float, 2) as avg_queries_per_active_user
+    round(fa.total_queries::float / nullif(fa.active_users, 0)::float, 2) as avg_queries_per_active_user,
+    -- Engagement level counts
+    coalesce(es.power_users, 0) as power_users,
+    coalesce(es.high_engagement_users, 0) as high_engagement_users,
+    coalesce(es.medium_engagement_users, 0) as medium_engagement_users,
+    coalesce(es.low_engagement_users, 0) as low_engagement_users,
+    round(coalesce(es.power_users, 0)::float / nullif(fa.active_users, 0)::float * 100, 2) as power_user_rate
 from {{ ref('base_firms') }} f
 left join firm_users fu on f.firm_id = fu.firm_id
-left join firm_activity fa on f.firm_id = fa.firm_id 
+left join firm_activity fa on f.firm_id = fa.firm_id
+left join engagement_stats es on f.firm_id = es.firm_id 
