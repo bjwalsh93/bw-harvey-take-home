@@ -36,6 +36,8 @@ Engagement levels are defined as:
 - Medium: >2 queries OR >12 documents
 - Low: ≥1 active day AND (≥1 query OR ≥1 document)
 - Inactive: No activity
+- 
+Engagement thresholds were derived by analyzing actual user activity distributions across queries, documents, and active days. See analyses/power_user_analysis.sql for full logic and justification.
 
 ### firm_usage_summary
 This table provides a single-row summary for each firm's overall platform usage. Use it to assess firm health, compare adoption across firms, and identify firms needing attention.
