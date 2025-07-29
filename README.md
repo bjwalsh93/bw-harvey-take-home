@@ -43,11 +43,13 @@ Engagement thresholds were derived by analyzing actual user activity distributio
 This table provides a single-row summary for each firm's overall platform usage. Use it to assess firm health, compare adoption across firms, and identify firms needing attention.
 
 Key metrics:
-- Total active users
-- Last month's active users
-- Query volumes by feature
+- Total active users (all-time and last month)
+- Query volumes by feature (ASSISTANT, VAULT, WORKFLOW)
 - Engagement rate (active users / firm size)
 - Satisfaction rate (high feedback queries / total queries)
+- **Power user counts and rates** (new)
+- **Engagement level breakdowns** (Power, High, Medium, Low users)
+- **Power user rate** (power users / active users)
 
 ### cohort_analysis
 This table groups users by their start month to track retention and usage patterns over time. Use it to evaluate onboarding effectiveness and long-term engagement trends.
@@ -83,6 +85,8 @@ Key metrics:
 - **Engagement Rate**: Low rates in large firms often indicate adoption limited to specific practice groups - opportunity for cross-department expansion.
 - **Satisfaction Rate**: High feedback scores on document-heavy queries validate the AI's accuracy for legal research tasks.
 - **Feature Distribution**: Firms heavily using VAULT might need education on WORKFLOW features for end-to-end matter management.
+- **Power User Rate**: Firms with high power user rates (20%+) have successfully integrated Harvey into daily practice. Firms with low rates may need additional training or feature education.
+- **Engagement Level Distribution**: Healthy firms show a mix of engagement levels, with growing power user counts over time indicating successful adoption.
 
 ### Cohort Analysis Application
 - **Early Usage**: First month patterns often reflect initial training effectiveness. High early document volumes suggest successful onboarding.
